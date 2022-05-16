@@ -10,38 +10,38 @@
 using namespace Eigen;
 using namespace std;
 
-void transformationMatrix (double* joint) {
-    MatrixXf A1(4,4);
-    MatrixXf A2(4,4);
-    MatrixXf A3(4,4);
-    MatrixXf A4(4,4);
-    MatrixXf A5(4,4);
-    MatrixXf A6(4,4);
-    MatrixXf A7(4,4);
-    MatrixXf A8(4,4);
+void transformationMatrix (MatrixXf joint) {
+    Matrix4f A1;
+    Matrix4f A2;
+    Matrix4f A3;
+    Matrix4f A4;
+    Matrix4f A5;
+    Matrix4f A6;
+    Matrix4f A7;
+    Matrix4f A8;
 
 
     for (int i=0; i<7 ; i++ ) {
         switch (i) {
             case '0':
                 A1 << cos(joint[i]),-sin (joint[i]),0, 0,
-                     sin(joint[i]), cos (joint[i]), 0, 0,
-                     0, 0, 1, 0.333,
-                     0, 0, 0, 1;
+                        sin(joint[i]), cos (joint[i]), 0, 0,
+                        0, 0, 1, 0.333,
+                        0, 0, 0, 1;
                 break;
 
             case '1':
                 A2 << cos(joint[i]),0, -sin (joint[i]), 0,
-                      sin(joint[i]), 0, cos (joint[i]),0,
-                      0, -1, 0, 0,
-                      0, 0, 0, 1;
+                        sin(joint[i]), 0, cos (joint[i]),0,
+                        0, -1, 0, 0,
+                        0, 0, 0, 1;
                 break;
 
             case '2':
                 A3 << cos(joint[i]),0, sin (joint[i]), 0,
-                      sin(joint[i]), 0, -cos (joint[i]), 0,
-                      0, 1, 0, 0.316,
-                      0, 0, 0, 1;
+                        sin(joint[i]), 0, -cos (joint[i]), 0,
+                        0, 1, 0, 0.316,
+                        0, 0, 0, 1;
                 break;
 
             case '3':
@@ -53,22 +53,22 @@ void transformationMatrix (double* joint) {
 
             case '4':
                 A5 << cos(joint[i]),0, -sin (joint[i]), -0.0825*cos(joint[i]),
-                       sin(joint[i]), 0, cos (joint[i]), -0.0825*cos(joint[i]),
-                       0, -1, 0, 0,
-                       0, 0, 0, 1;
+                        sin(joint[i]), 0, cos (joint[i]), -0.0825*cos(joint[i]),
+                        0, -1, 0, 0,
+                        0, 0, 0, 1;
                 break;
 
             case '5':
                 A6 << cos(joint[i]),0, sin (joint[i]), 0,
-                       sin(joint[i]), 0, -cos (joint[i]), 0,
-                       0, 1, 0, 0,
-                       0, 0, 0, 1;
+                        sin(joint[i]), 0, -cos (joint[i]), 0,
+                        0, 1, 0, 0,
+                        0, 0, 0, 1;
                 break;
             case '6':
                 A7 << cos(joint[i]),0, sin (joint[i]), 0.088*cos(joint[i]),
-                       sin(joint[i]), 0, -cos (joint[i]), 0.088*cos(joint[i]),
-                       0, 1, 0, 0,
-                       0, 0, 0, 1;
+                        sin(joint[i]), 0, -cos (joint[i]), 0.088*cos(joint[i]),
+                        0, 1, 0, 0,
+                        0, 0, 0, 1;
                 break;
 
         }
@@ -82,12 +82,12 @@ void transformationMatrix (double* joint) {
 
 void callBack (const sensor_msgs::JointState& msg)
 {
-    double position[6];
+    MatrixXf position(6,1);
 
     std::cout << "Joints: ";
     for (int i=0; i<7 ; ++i ) {
-        position[i] = msg.position[i];
-        std:: cout << position[i] << " " ;
+        position(i,1) = msg.position[i];
+        std:: cout << position(i,1) << " " ;
     }
     transformationMatrix (position);
     std::cout << "/n/n";
