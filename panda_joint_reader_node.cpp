@@ -24,49 +24,49 @@ void transformationMatrix (MatrixXf joint) {
     for (int i=0; i<7 ; i++ ) {
         switch (i) {
             case '0':
-                A1 << cos(joint[i]),-sin (joint[i]),0, 0,
-                        sin(joint[i]), cos (joint[i]), 0, 0,
-                        0, 0, 1, 0.333,
+                A1 << cos(joint(i)),-sin (joint(i)),0, 0,
+                        sin(joint(i)), cos (joint(i)), 0, 0,
+                        0, 0, 1, 0.333;
                         0, 0, 0, 1;
                 break;
 
             case '1':
-                A2 << cos(joint[i]),0, -sin (joint[i]), 0,
-                        sin(joint[i]), 0, cos (joint[i]),0,
-                        0, -1, 0, 0,
+                A2 << cos(joint(i)),0, -sin (joint(i)), 0,
+                        sin(joint(i)), 0, cos (joint(i)),0,
+                        0, -1, 0, 0;
                         0, 0, 0, 1;
                 break;
 
             case '2':
-                A3 << cos(joint[i]),0, sin (joint[i]), 0,
-                        sin(joint[i]), 0, -cos (joint[i]), 0,
+                A3 << cos(joint(i)),0, sin (joint(i)), 0,
+                        sin(joint(i)), 0, -cos (joint(i)), 0,
                         0, 1, 0, 0.316,
                         0, 0, 0, 1;
                 break;
 
             case '3':
-                A4  << cos(joint[i]),0, sin (joint[i]), 0.0825*cos(joint[i]),
-                        sin(joint[i]), 0, -cos (joint[i]), 0.0825*cos(joint[i]),
+                A4  << cos(joint(i)),0, sin (joint(i)), 0.0825*cos(joint(i)),
+                        sin(joint(i)), 0, -cos (joint(i)), 0.0825*cos(joint(i)),
                         0, 1, 0, 0,
                         0, 0, 0, 1;
                 break;
 
             case '4':
-                A5 << cos(joint[i]),0, -sin (joint[i]), -0.0825*cos(joint[i]),
-                        sin(joint[i]), 0, cos (joint[i]), -0.0825*cos(joint[i]),
+                A5 << cos(joint(i)),0, -sin (joint(i)), -0.0825*cos(joint(i)),
+                        sin(joint(i)), 0, cos (joint(i)), -0.0825*cos(joint(i)),
                         0, -1, 0, 0,
                         0, 0, 0, 1;
                 break;
 
             case '5':
-                A6 << cos(joint[i]),0, sin (joint[i]), 0,
-                        sin(joint[i]), 0, -cos (joint[i]), 0,
+                A6 << cos(joint(i)),0, sin (joint(i)), 0,
+                        sin(joint(i)), 0, -cos (joint(i)), 0,
                         0, 1, 0, 0,
                         0, 0, 0, 1;
                 break;
             case '6':
-                A7 << cos(joint[i]),0, sin (joint[i]), 0.088*cos(joint[i]),
-                        sin(joint[i]), 0, -cos (joint[i]), 0.088*cos(joint[i]),
+                A7 << cos(joint(i)),0, sin (joint(i)), 0.088*cos(joint(i)),
+                        sin(joint(i)), 0, -cos (joint(i)), 0.088*cos(joint(i)),
                         0, 1, 0, 0,
                         0, 0, 0, 1;
                 break;
@@ -74,7 +74,7 @@ void transformationMatrix (MatrixXf joint) {
         }
 
     }
-    MatrixXf T70 (4,4);
+    Matrix4f T70 ;
     T70 << A1*A2*A3*A4*A5*A6*A7 ;
     ROS_INFO_STREAM(T70);
 
