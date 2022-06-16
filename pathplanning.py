@@ -9,40 +9,23 @@ import InverseKinematics as invKin
 
 y = 0.1
 DK = dk.dkmatrix()
-A = DK[0:3, 0:4]  # crop last row
-A = sympy.transpose(A)
-
-A = Matrix([[A[0, 0]],
-            [A[1, 0]],
-            [A[2, 0]],
-            [A[3, 0]],
-            [A[0, 1]],
-            [A[1, 1]],
-            [A[2, 1]],
-            [A[3, 1]],
-            [A[0, 2]],
-            [A[1, 2]],
-            [A[2, 2]],
-            [A[3, 2]]])
-
-Q = Matrix([dk.q0, dk.q1, dk.q2, dk.q3, dk.q4, dk.q5, dk.q6])
-J = A.jacobian(Q)
-q_init = Matrix([[np.deg2rad(40), np.deg2rad(40), np.deg2rad(40), np.deg2rad(40), np.deg2rad(40), np.deg2rad(40),
-                  np.deg2rad(40)]]).transpose()
-A_init = A.evalf(subs={'theta1': q_init[0], 'theta2': q_init[1], 'theta3': q_init[2], 'theta4': q_init[3],
-                       'theta5': q_init[4], 'theta6': q_init[5], 'theta7': q_init[6]})
-A_final = Matrix([[A[0, 0]],
-                  [A[1, 0]],
-                  [A[2, 0]],
-                  [A[3, 0]+y],
-                  [A[0, 1]],
-                  [A[1, 1]],
-                  [A[2, 1]],
-                  [A[3, 1]],
-                  [A[0, 2]],
-                  [A[1, 2]],
-                  [A[2, 2]],
-                  [A[3, 2]]])
+A = invKin.A
+Q = invKin.Q
+J = invKin.J_lamb
+q_init = invKin.q_init
+A_init = invKin.A_init
+A_final = Matrix([[A_init[0, 0]],
+                  [A_init[1, 0]],
+                  [A_init[2, 0]],
+                  [A_init[3, 0]+y],
+                  [A_init[0, 1]],
+                  [A_init[1, 1]],
+                  [A_init[2, 1]],
+                  [A_init[3, 1]],
+                  [A_init[0, 2]],
+                  [A_init[1, 2]],
+                  [A_init[2, 2]],
+                  [A_init[3, 2]]])
 i = 0
 theta1 = arr.array('d', [0, 0, 0, 0, 0, 0, 0])
 theta2 = arr.array('d', [0, 0, 0, 0, 0, 0, 0])
@@ -63,20 +46,20 @@ while i < 8:
     theta7[i] = q_ini[6]
     A_init = A.evalf(subs={'theta1': q_ini[0], 'theta2': q_ini[1], 'theta3': q_ini[2], 'theta4': q_ini[3],
                            'theta5': q_ini[4], 'theta6': q_ini[5], 'theta7': q_ini[6]})
-    A_final = Matrix([[A[0, 0]],
-                      [A[1, 0]],
-                      [A[2, 0]],
-                      [A[3, 0]+y],
-                      [A[0, 1]],
-                      [A[1, 1]],
-                      [A[2, 1]],
-                      [A[3, 1]],
-                      [A[0, 2]],
-                      [A[1, 2]],
-                      [A[2, 2]],
-                      [A[3, 2]]])
+    A_final = Matrix([[A_init[0, 0]],
+                      [A_init[1, 0]],
+                      [A_init[2, 0]],
+                      [A_init[3, 0]+y],
+                      [A_init[0, 1]],
+                      [A_init[1, 1]],
+                      [A_init[2, 1]],
+                      [A_init[3, 1]],
+                      [A_init[0, 2]],
+                      [A_init[1, 2]],
+                      [A_init[2, 2]],
+                      [A_init[3, 2]]])
     q_ini = invKin.incremental_ik(A, q_ini, A_init, A_final)
-    
+
 
 def trajectory(B):
     max_acc = 50
