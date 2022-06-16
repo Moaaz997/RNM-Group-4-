@@ -35,23 +35,25 @@ Q = Matrix([dk.q0, dk.q1, dk.q2, dk.q3, dk.q4, dk.q5, dk.q6])
 J = A.jacobian(Q)
 # jacobian has the size (12,7)
 
-q_init = Matrix([[np.deg2rad(40), np.deg2rad(40), np.deg2rad(40), np.deg2rad(40), np.deg2rad(40), np.deg2rad(40),
-                  np.deg2rad(40)]]).transpose()
+theta = 0
+# currently starting out
+# q_init = Matrix([[np.deg2rad(theta), np.deg2rad(theta), np.deg2rad(theta), np.deg2rad(theta), np.deg2rad(theta),
+# np.deg2rad(theta), np.deg2rad(theta)]]).transpose()
+
+q_init = Matrix([-2.8973, -1.7628, -2.8973, -3.0718, -2.8973, -0.0175, -2.8973])
 A_init = A.evalf(subs={'theta1': q_init[0], 'theta2': q_init[1], 'theta3': q_init[2], 'theta4': q_init[3],
                        'theta5': q_init[4], 'theta6': q_init[5], 'theta7': q_init[6]})
-A_final = Matrix([
-    0.5792, 0.5792, -0.5736,
-    -0.7071, 0.7071, 0,
-    0.4056, 0.4056, 0.8192,
-    93.2834, 93.2834, 288.4050
-])
+q_final = Matrix([np.deg2rad(10), 0, 0, 0, 0, np.deg2rad(10), np.deg2rad(10)])
+A_final = A.evalf(subs={'theta1': q_final[0], 'theta2': q_final[1], 'theta3': q_final[2], 'theta4': q_final[3],
+                        'theta5': q_final[4], 'theta6': q_final[5], 'theta7': q_final[6]})
+print(abs(max(A_final - A_init)))
 
 J_lamb = lambdify([dk.q0, dk.q1, dk.q2, dk.q3, dk.q4, dk.q5, dk.q6], J)
 
 
 def incremental_ik(B, q_current, A_current, A_finall):
     delta_A = (A_finall - A_current)
-    #q_current = np.array(q_current, dtype=int)
+    # q_current = np.array(q_current, dtype=int)
     while max(Abs(delta_A)) > 0.01:
         q_0 = np.array(q_current[0], dtype=float)
         q_1 = np.array(q_current[1], dtype=float)
@@ -79,8 +81,8 @@ def incremental_ik(B, q_current, A_current, A_finall):
 
 
 q_final = incremental_ik(A, q_init, A_init, A_final)
+A_final2 = A.evalf(subs={'theta1': q_final[0], 'theta2': q_final[1], 'theta3': q_final[2],
+                         'theta4': q_final[3], 'theta5': q_final[4], 'theta6': q_final[5],
+                         'theta7': q_final[6]})
 
-A_final2 = A.evalf(subs={'theta1': q_init[0], 'theta2': q_init[1], 'theta3': q_init[2],
-                         'theta4': q_init[3], 'theta5': q_init[4], 'theta6': q_init[5],
-                         'theta7': q_init[6]})
 print(A_final2.reshape(4, 3))
