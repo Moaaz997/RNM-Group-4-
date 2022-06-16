@@ -5,10 +5,13 @@ import sys
 from sensor_msgs.msg import JointState
 import math
 import numpy
+from sympy import *
+
+init_printing(use_unicode=True)
 
 
 def callback(msg):
-    pos = numpy.empty(7)
+    pos = zeros(1, 7)
     for x in range(len(pos)):
         pos[x] = msg.position
         print(pos)
@@ -20,31 +23,32 @@ def mtrans(joint):
                        [math.sin(joint[0]), math.cos(joint[0]), 0, 0],
                        [0, 0, 1, 0.333], [0, 0, 0, 1]])
     a2 = numpy.matrix([[math.cos(joint[1]), 0, -math.sin(joint[1]), 0],
-                      [math.sin(joint[1]), 0, math.cos(joint[1]), 0],
-                      [0, -1, 0, 0],
-                      [0, 0, 0, 1]])
+                       [math.sin(joint[1]), 0, math.cos(joint[1]), 0],
+                       [0, -1, 0, 0],
+                       [0, 0, 0, 1]])
     a3 = numpy.matrix([[math.cos(joint[2]), 0, math.sin(joint[2]), 0],
                        [math.sin(joint[2]), 0, -math.cos(joint[2]), 0],
                        [0, 1, 0, 0.316],
                        [0, 0, 0, 1]])
-    a4 = numpy.matrix([[math.cos(joint[3]), 0, math.sin(joint[3]), 0.0825*math.cos(joint[3])],
-                      [math.sin(joint[3]), 0, -math.cos(joint[3]), 0.0825*math.cos(joint[3])],
-                      [0, 1, 0, 0]
-                      [0, 0, 0, 1]])
-    a5 = numpy.matrix([[math.cos(joint[4]), 0, -math.sin(joint[4]), -0.0825*math.cos(joint[4])],
-                      [math.sin(joint[4]), 0, math.cos(joint[4]), -0.0825*math.cos(joint[4])],
-                      [0, -1, 0, 0]
-                      [0, 0, 0, 1]])
+    a4 = numpy.matrix([[math.cos(joint[3]), 0, math.sin(joint[3]), 0.0825 * math.cos(joint[3])],
+                       [math.sin(joint[3]), 0, -math.cos(joint[3]), 0.0825 * math.cos(joint[3])],
+                       [0, 1, 0, 0],
+                       [0, 0, 0, 1]])
+    a5 = numpy.matrix([[math.cos(joint[4]), 0, -math.sin(joint[4]), -0.0825 * math.cos(joint[4])],
+                       [math.sin(joint[4]), 0, math.cos(joint[4]), -0.0825 * math.cos(joint[4])],
+                       [0, -1, 0, 0],
+                       [0, 0, 0, 1]])
     a6 = numpy.matrix([[math.cos(joint[5]), 0, math.sin(joint[5]), 0],
-                      [math.sin(joint[5]), 0, -math.cos(joint[5]), 0],
-                      [0, 1, 0, 0]
-                      [0, 0, 0, 1]])
-    a7 = numpy.matrix([[math.cos(joint[6]), 0, math.sin(joint[6]), 0.088*math.cos(joint[6])],
-                      [math.sin(joint[6]), 0, -math.cos(joint[6]), 0.088*math.cos(joint[6])],
-                      [0, 1, 0, 0]
-                      [0, 0, 0, 1]])
+                       [math.sin(joint[5]), 0, -math.cos(joint[5]), 0],
+                       [0, 1, 0, 0],
+                       [0, 0, 0, 1]])
+    a7 = numpy.matrix([[math.cos(joint[6]), 0, math.sin(joint[6]), 0.088 * math.cos(joint[6])],
+                       [math.sin(joint[6]), 0, -math.cos(joint[6]), 0.088 * math.cos(joint[6])],
+                       [0, 1, 0, 0],
+                       [0, 0, 0, 1]])
     finalt = numpy.matmul(a1, a2, a3, a4, a5, a6, a7)
     print(finalt)
+
 
 def main(argv):
     # Initialize ROS connection
@@ -71,4 +75,3 @@ def main(argv):
 
 if __name__ == '__main__':
     main(sys.argv)
-
