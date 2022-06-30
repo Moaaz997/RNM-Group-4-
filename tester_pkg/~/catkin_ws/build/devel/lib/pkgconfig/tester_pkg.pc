@@ -1,0 +1,8 @@
+prefix=/home/sherif/catkin_ws/src/tester_pkg/~/catkin_ws/build/devel
+
+Name: tester_pkg
+Description: Description of tester_pkg
+Version: 0.0.0
+Cflags: -I/home/sherif/catkin_ws/src/tester_pkg/include
+Libs: -L${prefix}/lib 
+Requires: message_generation roscpp sensor_msgs std_msgs
