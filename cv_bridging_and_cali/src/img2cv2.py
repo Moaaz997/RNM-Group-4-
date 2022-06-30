@@ -46,7 +46,7 @@ def receive_message():
 
   rospy.init_node('video_sub_py', anonymous=True)
    
-  rospy.Subscriber('/k4a/ir/image_raw', Image, callback) # '/k4a/rgb/image_raw' for the RGB image
+  rospy.Subscriber('/k4a/rgb/image_rect_color', Image, callback) # '/k4a/rgb/image_raw' for the RGB image
  
   rospy.spin()
 
