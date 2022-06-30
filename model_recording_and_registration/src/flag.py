@@ -2,21 +2,18 @@
 import rospy
 from std_msgs.msg import Int16
 from sensor_msgs.msg import JointState
-
+published=True
 def callback(data):
-    local_flag=False
+    global published
     target_JS=[-1.266, 0.75, 2.703, -2.408, -1.98, 1.311, -0.028]
     data=data.position
     rounded=list(map(lambda x: round(x,3),data))
     rospy.loginfo((rounded))
-    if target_JS==rounded:
+    if target_JS==rounded and published:
         pub.publish(1)
-        rospy.Rate.sleep(30000)
-        local_flag=True
-    else:
-        local_flag=False
-
-
+        published=False
+        print(published)
+    print(published)
 
     
 def flag():
