@@ -3,10 +3,12 @@
 
 import open3d
 import numpy as np
-from ctypes import * # convert float to uint32
+from ctypes import *
+
+from traitlets import Bool # convert float to uint32
 
 import rospy
-from std_msgs.msg import Header
+from std_msgs.msg import Bool
 from sensor_msgs.msg import PointCloud2, PointField
 import sensor_msgs.point_cloud2 as pc2
 
@@ -68,19 +70,19 @@ def convertCloudFromRosToOpen3d(ros_cloud):
     return open3d_cloud
 
 # global received_ros_cloud
-received_ros_cloud = None
-def callback(ros_cloud):
-    def func():
-        print("is shudown now")
+# received_ros_cloud = None
+# def callback(ros_cloud):
+#     def func():
+#         print("is shudown now")
 
-    global flag
-    if flag:
-        print("teezak")
-        global received_ros_cloud
-        received_ros_cloud=ros_cloud
-        rospy.loginfo("-- Received ROS PointCloud2 message.")
-        flag=False
-        rospy.on_shutdown(func)
+#     global flag
+#     if flag:
+#         print("teezak")
+#         global received_ros_cloud
+#         received_ros_cloud=ros_cloud
+#         rospy.loginfo("-- Received ROS PointCloud2 message.")
+#         flag=False
+#         rospy.on_shutdown(func)
 
 
 # -- Example of usage
@@ -92,21 +94,23 @@ if __name__ == "__main__":
     PYTHON_FILE_PATH=os.path.join(os.path.dirname(__file__))+"/"
 
 
-    while not rospy.is_shutdown():
-        print("taztooza")
-        rospy.Subscriber('/points2', PointCloud2, callback)
-        rospy.spin()
+    # while not rospy.is_shutdown():
+    #     print("taztooza")
+    #     rospy.Subscriber('/points2', PointCloud2, callback)
+    #     rospy.spin()
     
     # -- After subscribing the ros cloud, convert it back to open3d, and draw
     # print(received_ros_cloud)
-
-    received_open3d_cloud = convertCloudFromRosToOpen3d(received_ros_cloud)
+    flag=rospy.wait_for_message("/flag_point_cloud", Bool)
+    if flag:
+        received_ros_cloud=rospy.wait_for_message("/points2",PointCloud2 )
+        received_open3d_cloud = convertCloudFromRosToOpen3d(received_ros_cloud)
     print(received_open3d_cloud)
     open3d.visualization.draw_geometries([received_open3d_cloud])
 
     # write to file
 
-    output_filename=PYTHON_FILE_PATH+"conversion_result.pcd"
+    output_filename=PYTHON_FILE_PATH+"conversion_new_result.pcd"
     open3d.io.write_point_cloud(output_filename, received_open3d_cloud)
     rospy.loginfo("-- Write result point cloud to: "+output_filename)
 
