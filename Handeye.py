@@ -29,10 +29,10 @@ for image in glob.glob('*.jpg'):
         rvecs_r=cv.Rodrigues(rvecs)[0]
         row=np.array([0,0,0,1])
 
-        T=np.c_[rvecs_r,tvecs]
+        T=np.c_[rvecs_r,tvecs*0.04]
         T=np.vstack([T,row])
         pose_l.append(T)
-        
+
     print("Rotation_rod: \n",rvecs_r,"\n",
           "Translation: \n",tvecs,"\n"
           "Translation: \n", T)
